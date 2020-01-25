@@ -428,5 +428,27 @@ public class BinaryTree {
 		}
 		return maxLevel + 1 ;
 	}
+	
+	public int fca(int a, int b) {
+		return this.fca(this.root, this.root, a, b).data;
+	}
     
+	private Node fca(Node parent, Node child, int a, int b) {
+		if(parent == null || child == null) {
+			return null;
+		}
+		if(child.data == a || child.data == b) {
+			return parent;
+		}
+		Node leftSubtree = fca(child, child.left, a, b);
+		Node rightSubtree = fca(child, child.right, a, b);
+		if(leftSubtree == rightSubtree)
+			return rightSubtree;
+		else {
+			if(leftSubtree == null)
+				return rightSubtree;
+			else
+				return leftSubtree;
+		}
+	}
 }
