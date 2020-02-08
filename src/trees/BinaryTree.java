@@ -451,4 +451,37 @@ public class BinaryTree {
 				return leftSubtree;
 		}
 	}
+	
+	protected void countPaths(int sum) {
+		int ans = countPathsWithSum(this.root, 0, sum, new HashMap<>());
+		System.out.println(ans);
+	}
+	
+	private int countPathsWithSum(Node node, int runningSum, int targetSum, HashMap<Integer, Integer> count) {
+		if(node==null) return 0;
+		
+		runningSum += node.data;
+		int sum = runningSum - targetSum;
+		int totalPaths = count.getOrDefault(sum, 0);
+		
+		//One extra path
+		if(runningSum == targetSum)
+			totalPaths++;
+		
+		incrementHashTable(count, runningSum, 1); //increment paths by 1
+		totalPaths += countPathsWithSum(node.left, runningSum, targetSum, count);
+		totalPaths += countPathsWithSum(node.right, runningSum, targetSum, count);
+		incrementHashTable(count, runningSum, -1); //decrement paths by 1
+		
+		return totalPaths;
+	}
+	
+	private void incrementHashTable(HashMap<Integer, Integer> map, int runningSum, int delta) {
+		int newCount = map.getOrDefault(runningSum, 0) + delta;
+		if(newCount == 0) {
+			map.remove(runningSum);
+		}else {
+			map.put(runningSum, newCount);
+		}
+	}
 }
